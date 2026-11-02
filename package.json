@@ -1,0 +1,17 @@
+{
+  "name": "mermaid-render-atlassian",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Chrome extension that renders Mermaid code blocks as diagrams in Jira, Confluence and Bitbucket.",
+  "type": "module",
+  "license": "MIT",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "icons": "node scripts/icons.mjs",
+    "test": "node --test test/",
+    "package": "npm run build && node scripts/package.mjs"
+  },
+  "devDependencies": {
+    "mermaid": "12.2.0"
+  }
+}

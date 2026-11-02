@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Mermaid Render settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <main>
+    <section>
+      <h2>Diagram theme</h2>
+      <label><input type="radio" name="theme" value="auto"> Match the page (light or dark)</label>
+      <label><input type="radio" name="theme" value="light"> Always light</label>
+      <label><input type="radio" name="theme" value="dark"> Always dark</label>
+    </section>
+
+    <section>
+      <h2>Sites</h2>
+      <p class="hint">Works on these without any setup:</p>
+      <ul id="built-in"></ul>
+
+      <p class="hint">Other Atlassian Cloud sites, such as a custom domain:</p>
+      <ul id="custom"></ul>
+      <form id="add-form">
+        <input id="host" type="text" placeholder="jira.example.com" autocomplete="off" spellcheck="false">
+        <button type="submit">Add site</button>
+      </form>
+      <p id="error" class="error" role="alert"></p>
+    </section>
+
+    <p class="hint">Diagrams are drawn in your browser. Nothing is sent anywhere.</p>
+  </main>
+  <script type="module" src="options.js"></script>
+</body>
+</html>
