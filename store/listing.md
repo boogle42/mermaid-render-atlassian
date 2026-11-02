@@ -43,7 +43,7 @@ Not affiliated with or endorsed by Atlassian. Jira, Confluence and Bitbucket are
 
 | Slot | File |
 |---|---|
-| Store icon (128×128) | `src/icons/icon128.png` |
+| Store icon (128×128) | `store/out/store-icon-128.png` |
 | Screenshots (1280×800) | `store/out/1-diagrams-light.png`, `2-dark-mode.png`, `3-full-screen.png` |
 | Small promo tile (440×280) | `store/out/promo-tile-440x280.png` |
 

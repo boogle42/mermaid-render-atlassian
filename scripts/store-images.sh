@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Renders the Chrome Web Store images into store/out/ with headless Chrome:
-# three 1280x800 screenshots and the 440x280 promo tile.
+# three 1280x800 screenshots, the 440x280 promo tile and the 128x128 store icon.
 set -euo pipefail
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
@@ -25,3 +25,6 @@ shot light 1280,800 1-diagrams-light.png
 shot dark 1280,800 2-dark-mode.png
 shot viewer 1280,800 3-full-screen.png
 shot tile 440,280 promo-tile-440x280.png
+
+cp "$root/src/icons/icon128.png" "$out/store-icon-128.png"
+echo "$out/store-icon-128.png"
