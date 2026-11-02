@@ -2,6 +2,8 @@
 
 A Chrome extension that shows Mermaid code blocks as diagrams in Jira, Confluence and Bitbucket.
 
+**[Install from the Chrome Web Store](https://chromewebstore.google.com/detail/elmjlcohbkidocbmlkghepmkbnikeelo)**
+
 - **Works out of the box** on Jira and Confluence Cloud (`*.atlassian.net` and older `*.jira.com` sites) and Bitbucket Cloud (file view, READMEs, PR descriptions and comments).
 - **Leaves other code alone.** Only blocks whose content is Mermaid are touched. The original block is hidden, never rewritten, and a **Show source** button brings it back.
 - **Full screen** with zoom (scroll, pinch, + and −, fit, 100%) and drag to pan, for diagrams too big for the page.
