@@ -14,6 +14,8 @@
   globalThis.__mermaidRenderLoaded = true;
 
   const { CODE_BLOCK_TARGETS, isMermaidSource } = globalThis.MermaidRenderDetect;
+  const { mermaidLiveUrl } = globalThis.MermaidRenderLive;
+  const { open: openViewer } = globalThis.MermaidRenderViewer;
   const CONTAINER_CLASS = 'mr-diagram';
 
   /**
@@ -27,9 +29,10 @@
     .label, .nodeLabel, .edgeLabel, .cluster-label, foreignObject div, p { line-height: 1.5 !important; }
   `;
 
-  /** @type {Map<Element, {source: string, container: HTMLElement, canvas: HTMLElement, button: HTMLButtonElement, note: HTMLElement, view: 'diagram'|'source', theme: string|null, error: string|null}>} */
+  /** @type {Map<Element, {source: string, container: HTMLElement, canvas: HTMLElement, button: HTMLButtonElement, fullButton: HTMLButtonElement, liveLink: HTMLAnchorElement, note: HTMLElement, view: 'diagram'|'source', theme: string|null, error: string|null}>} */
   const blocks = new Map();
   let themeSetting = 'auto';
+  let liveLinkEnabled = true;
   let mermaidLoading = null;
   let renderSeq = 0;
   let renderQueue = Promise.resolve();
@@ -74,6 +77,17 @@
     state.note.hidden = !state.error;
     state.button.hidden = state.theme === null || !!state.error;
     state.button.textContent = showDiagram ? 'Show source' : 'Show diagram';
+    state.fullButton.hidden = !showDiagram;
+    state.liveLink.hidden = !liveLinkEnabled || !state.liveLink.href;
+  }
+
+  function makeButton(label) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'mr-button';
+    b.textContent = label;
+    b.hidden = true;
+    return b;
   }
 
   function createState(wrapper, source) {
@@ -82,11 +96,16 @@
 
     const toolbar = document.createElement('div');
     toolbar.className = 'mr-toolbar';
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.className = 'mr-button';
-    button.hidden = true;
-    toolbar.append(button);
+    const liveLink = document.createElement('a');
+    liveLink.className = 'mr-button';
+    liveLink.target = '_blank';
+    liveLink.rel = 'noopener noreferrer';
+    liveLink.textContent = 'Open in Mermaid Live';
+    liveLink.title = 'Edit a copy of this diagram at mermaid.live';
+    liveLink.hidden = true;
+    const fullButton = makeButton('Full screen');
+    const button = makeButton('');
+    toolbar.append(liveLink, fullButton, button);
 
     const canvas = document.createElement('div');
     canvas.className = 'mr-canvas';
@@ -97,11 +116,21 @@
     note.hidden = true;
 
     container.append(toolbar, canvas, note);
-    const state = { source, container, canvas, button, note, view: 'diagram', theme: null, error: null };
+    const state = { source, container, canvas, button, fullButton, liveLink, note, view: 'diagram', theme: null, error: null };
     button.addEventListener('click', () => {
       state.view = state.view === 'diagram' ? 'source' : 'diagram';
       applyView(wrapper, state);
     });
+    fullButton.addEventListener('click', () => {
+      const svg = canvas.querySelector('svg');
+      if (svg) openViewer(svg, { dark: state.theme === 'dark', returnFocus: fullButton });
+    });
+    mermaidLiveUrl(source)
+      .then((url) => {
+        liveLink.href = url;
+        applyView(wrapper, state);
+      })
+      .catch((err) => console.warn('[Mermaid Render]', err));
     return state;
   }
 
@@ -209,12 +238,18 @@
   });
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', rerenderForTheme);
 
-  chrome.storage.sync.get({ theme: 'auto' }).then(({ theme }) => {
+  chrome.storage.sync.get({ theme: 'auto', liveLink: true }).then(({ theme, liveLink }) => {
     themeSetting = theme;
+    liveLinkEnabled = liveLink;
     scan();
   });
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === 'sync' && changes.theme) {
+    if (area !== 'sync') return;
+    if (changes.liveLink) {
+      liveLinkEnabled = changes.liveLink.newValue ?? true;
+      for (const [wrapper, state] of blocks) applyView(wrapper, state);
+    }
+    if (changes.theme) {
       themeSetting = changes.theme.newValue ?? 'auto';
       rerenderForTheme();
     }

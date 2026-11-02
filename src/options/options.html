@@ -15,6 +15,12 @@
     </section>
 
     <section>
+      <h2>Toolbar</h2>
+      <label><input type="checkbox" id="live-link"> Show an <b>Open in Mermaid Live</b> link</label>
+      <p class="hint">The link opens a copy of the diagram at mermaid.live, a third-party site. The diagram is put in the part of the link after <code>#</code>, which browsers don't send to the site's server.</p>
+    </section>
+
+    <section>
       <h2>Sites</h2>
       <p class="hint">Works on these without any setup:</p>
       <ul id="built-in"></ul>
@@ -28,7 +34,7 @@
       <p id="error" class="error" role="alert"></p>
     </section>
 
-    <p class="hint">Diagrams are drawn in your browser. Nothing is sent anywhere.</p>
+    <p class="hint">Diagrams are drawn in your browser. Nothing is sent anywhere unless you click Open in Mermaid Live.</p>
   </main>
   <script type="module" src="options.js"></script>
 </body>

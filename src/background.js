@@ -5,7 +5,7 @@
 
 const CUSTOM_SCRIPT_ID = 'custom-hosts';
 const CONTENT_SCRIPT = {
-  js: ['content/detect.js', 'content/main.js'],
+  js: ['content/detect.js', 'content/live.js', 'content/viewer.js', 'content/main.js'],
   css: ['content/style.css'],
   runAt: 'document_idle',
 };

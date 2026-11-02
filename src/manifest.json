@@ -2,8 +2,8 @@
   "manifest_version": 3,
   "name": "Mermaid Render for Jira, Confluence & Bitbucket",
   "short_name": "Mermaid Render",
-  "version": "0.1.0",
-  "description": "Renders Mermaid code blocks as diagrams in Jira, Confluence and Bitbucket. Runs locally; sends nothing anywhere.",
+  "version": "0.2.0",
+  "description": "Renders Mermaid code blocks as diagrams in Jira, Confluence and Bitbucket. Full screen with zoom. Runs locally.",
   "icons": {
     "16": "icons/icon16.png",
     "32": "icons/icon32.png",
@@ -28,7 +28,7 @@
         "https://*.jira.com/*",
         "https://bitbucket.org/*"
       ],
-      "js": ["content/detect.js", "content/main.js"],
+      "js": ["content/detect.js", "content/live.js", "content/viewer.js", "content/main.js"],
       "css": ["content/style.css"],
       "run_at": "document_idle"
     }

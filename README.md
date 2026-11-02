@@ -4,8 +4,10 @@ A Chrome extension that shows Mermaid code blocks as diagrams in Jira, Confluenc
 
 - **Works out of the box** on Jira and Confluence Cloud (`*.atlassian.net` and older `*.jira.com` sites) and Bitbucket Cloud (file view, READMEs, PR descriptions and comments).
 - **Leaves other code alone.** Only blocks whose content is Mermaid are touched. The original block is hidden, never rewritten, and a **Show source** button brings it back.
+- **Full screen** with zoom (scroll, pinch, + and −, fit, 100%) and drag to pan, for diagrams too big for the page.
+- **Open in Mermaid Live** to edit a copy at [mermaid.live](https://mermaid.live). The link can be hidden in settings.
 - **Follows the page theme**, light or dark, and re-renders when it changes.
-- **Local only.** Mermaid is bundled; nothing is sent anywhere. See [PRIVACY.md](PRIVACY.md).
+- **Local only.** Mermaid is bundled; nothing is sent anywhere unless you click Open in Mermaid Live. See [PRIVACY.md](PRIVACY.md).
 
 ## How it finds diagrams
 
@@ -23,6 +25,7 @@ A block is treated as Mermaid when its first line (after optional front matter, 
 Click the toolbar icon:
 
 - **Diagram theme:** match the page, always light, or always dark.
+- **Toolbar:** show or hide the Open in Mermaid Live link.
 - **Sites:** add other Atlassian Cloud hosts, such as a custom domain. Chrome asks for access to each one. Self-hosted Data Center sites are not supported.
 
 ## Development

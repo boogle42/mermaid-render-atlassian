@@ -47,3 +47,112 @@
 .mr-diagram [hidden] {
   display: none !important;
 }
+
+a.mr-button,
+a.mr-button:hover,
+a.mr-button:visited {
+  color: var(--ds-text-subtle, #44546f);
+  text-decoration: none;
+}
+
+.mr-toolbar {
+  gap: 2px;
+}
+
+/* Full-screen viewer. It lives outside the page's themed containers and follows the diagram's theme. */
+
+.mr-viewer {
+  --mr-bg: #ffffff;
+  --mr-fg: #172b4d;
+  --mr-panel: rgba(255, 255, 255, 0.92);
+  --mr-border: rgba(9, 30, 66, 0.16);
+  --mr-hover: rgba(9, 30, 66, 0.08);
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  background: var(--mr-bg);
+  color: var(--mr-fg);
+  font: 13px/1.4 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  outline: none;
+}
+
+.mr-viewer.mr-viewer-dark {
+  --mr-bg: #1d2125;
+  --mr-fg: #dee4ea;
+  --mr-panel: rgba(34, 39, 43, 0.92);
+  --mr-border: rgba(255, 255, 255, 0.16);
+  --mr-hover: rgba(255, 255, 255, 0.1);
+}
+
+.mr-viewer-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+}
+
+.mr-viewer-stage.mr-dragging {
+  cursor: grabbing;
+}
+
+.mr-viewer-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  user-select: none;
+}
+
+.mr-viewer-content > svg {
+  display: block;
+  max-width: none !important;
+}
+
+.mr-viewer-toolbar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  background: var(--mr-panel);
+  border: 1px solid var(--mr-border);
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.mr-viewer-button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  padding: 4px 10px;
+  min-width: 32px;
+  cursor: pointer;
+}
+
+.mr-viewer-button:hover {
+  background: var(--mr-hover);
+}
+
+.mr-viewer-level {
+  min-width: 48px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.mr-viewer-hint {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 10px;
+  background: var(--mr-panel);
+  border: 1px solid var(--mr-border);
+  border-radius: 6px;
+  opacity: 0.8;
+  pointer-events: none;
+}

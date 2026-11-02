@@ -80,4 +80,8 @@ for (const radio of document.querySelectorAll('input[name="theme"]')) {
   radio.addEventListener('change', () => chrome.storage.sync.set({ theme: radio.value }));
 }
 
+const liveLink = document.getElementById('live-link');
+liveLink.checked = (await chrome.storage.sync.get({ liveLink: true })).liveLink;
+liveLink.addEventListener('change', () => chrome.storage.sync.set({ liveLink: liveLink.checked }));
+
 renderCustomHosts();
