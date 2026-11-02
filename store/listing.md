@@ -1,6 +1,6 @@
 # Chrome Web Store listing
 
-Paste-ready text for the developer console. Images come from `scripts/store-images.sh` (written to `store/out/`).
+Paste-ready text for the developer console. Upload `store/out/mermaid-render-atlassian-<version>.zip` from `npm run package`; images come from `scripts/store-images.sh`, also in `store/out/`.
 
 ## Store listing tab
 

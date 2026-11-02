@@ -43,7 +43,7 @@ Load `dist/` at `chrome://extensions` with **Developer mode** on and **Load unpa
 ## Publishing
 
 1. Bump `version` in `src/manifest.json` and `package.json`.
-2. `npm run package` writes `mermaid-render-atlassian-<version>.zip`.
+2. `npm run package` writes `store/out/mermaid-render-atlassian-<version>.zip`. `scripts/store-images.sh` regenerates the listing images there too; the listing text is in `store/listing.md`.
 3. Upload it in the [Chrome Web Store developer dashboard](https://chrome.google.com/webstore/devconsole).
 
 ## Licence
