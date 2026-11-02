@@ -1,0 +1,202 @@
+<!doctype html>
+<!--
+  Store screenshot scenes. Runs the extension's real content scripts against
+  Atlassian-style code-block markup, with a stub for the chrome.* APIs.
+  Pick a scene with the URL hash: #light, #dark, #viewer, #tile.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mermaid Render demo</title>
+<link rel="stylesheet" href="../dist/content/style.css">
+<style>
+  :root {
+    --ds-text: #172b4d;
+    --ds-text-subtle: #44546f;
+    --ds-border: #dcdfe4;
+    --ds-surface: #ffffff;
+    --page: #f1f2f4;
+    --caption-bg: #1f4fd1;
+  }
+  :root[data-color-mode="dark"] {
+    --ds-text: #dee4ea;
+    --ds-text-subtle: #9fadbc;
+    --ds-border: #38414a;
+    --ds-surface: #22272b;
+    --ds-background-neutral-subtle-hovered: rgba(255, 255, 255, 0.08);
+    --page: #161a1d;
+    --caption-bg: #1d3a8a;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font: 14px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--ds-text);
+    background: var(--page);
+    overflow: hidden;
+  }
+  .caption {
+    height: 120px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 64px;
+    background: var(--caption-bg);
+    color: #fff;
+  }
+  .caption h1 { margin: 0; font-size: 34px; font-weight: 650; letter-spacing: -0.01em; }
+  .caption p { margin: 4px 0 0; font-size: 18px; opacity: 0.85; }
+  .doc {
+    margin: 28px 64px 0;
+    height: 652px;
+    padding: 28px 40px;
+    background: var(--ds-surface);
+    border: 1px solid var(--ds-border);
+    border-radius: 8px 8px 0 0;
+    overflow: hidden;
+  }
+  .doc h2 { margin: 0 0 4px; font-size: 24px; }
+  .doc .meta { color: var(--ds-text-subtle); margin-bottom: 14px; }
+  .doc p { margin: 0 0 12px; max-width: 760px; }
+  .code-block code { display: block; font: 13px/1.5 ui-monospace, Menlo, monospace; white-space: pre; padding: 12px; border: 1px solid var(--ds-border); border-radius: 4px; }
+  .mr-canvas > svg { max-height: 420px; width: auto; }
+  .viewer-caption {
+    position: fixed; left: 24px; top: 24px; z-index: 2147483647;
+    padding: 14px 22px; border-radius: 10px;
+    background: var(--caption-bg); color: #fff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+  .viewer-caption h1 { margin: 0; font-size: 26px; }
+  .viewer-caption p { margin: 2px 0 0; font-size: 16px; opacity: 0.85; }
+
+  /* Promo tile, 440x280. */
+  .tile {
+    width: 440px; height: 280px; display: flex; align-items: center; gap: 22px;
+    padding: 0 32px; background: linear-gradient(135deg, #1f4fd1, #5b2bd1); color: #fff;
+  }
+  .tile img { width: 104px; height: 104px; }
+  .tile h1 { margin: 0; font-size: 30px; line-height: 1.1; }
+  .tile p { margin: 8px 0 0; font-size: 15px; opacity: 0.9; line-height: 1.35; }
+</style>
+</head>
+<body>
+<script>
+  globalThis.chrome = {
+    runtime: { sendMessage: async () => ({ ok: true }) },
+    storage: { sync: { get: async (defaults) => defaults }, onChanged: { addListener() {} } },
+  };
+
+  const SCENES = {
+    light: {
+      caption: ['Mermaid diagrams in Jira, Confluence & Bitbucket', 'Code blocks that hold Mermaid are drawn as diagrams. Other code is left alone.'],
+      title: 'Checkout: retry failed card payments',
+      meta: 'Description',
+      text: 'Payments that fail with a retryable error go back on the queue with backoff. After three attempts the order is held for review.',
+      code: `flowchart LR
+  A[Order placed] --> B{Charge card}
+  B -->|Approved| C[Confirm order]
+  B -->|Retryable error| D[Queue retry with backoff]
+  D --> E{Attempts < 3?}
+  E -->|Yes| B
+  E -->|No| F[Hold for review]
+  B -->|Declined| G[Notify customer]`,
+    },
+    dark: {
+      dark: true,
+      caption: ['Matches light and dark mode', 'Diagrams follow the page theme. Show source brings back the original block.'],
+      title: 'Single sign-on flow',
+      meta: 'Pull request description',
+      text: 'The app redirects to the identity provider and exchanges the returned code for tokens on the server.',
+      code: `sequenceDiagram
+  participant U as User
+  participant A as App
+  participant I as Identity provider
+  U->>A: Open dashboard
+  A->>I: Redirect to sign in
+  I->>U: Sign-in page
+  U->>I: Credentials
+  I->>A: Authorization code
+  A->>I: Exchange code for tokens
+  I-->>A: ID and access tokens
+  A-->>U: Dashboard`,
+    },
+    viewer: {
+      caption: ['Full screen with zoom', 'Scroll or pinch to zoom, drag to pan. Or open a copy in Mermaid Live.'],
+      title: 'Platform overview',
+      meta: 'Page',
+      text: '',
+      code: `flowchart LR
+  subgraph Clients
+    W[Web app]
+    M[Mobile app]
+    P[Partner API]
+  end
+  subgraph Edge
+    CDN[CDN]
+    G[API gateway]
+  end
+  subgraph Services
+    AU[Auth]
+    OR[Orders]
+    PA[Payments]
+    IN[Inventory]
+    NO[Notifications]
+  end
+  subgraph Data
+    DB[(Orders DB)]
+    Q[[Event bus]]
+    S3[(Object storage)]
+  end
+  W --> CDN --> G
+  M --> G
+  P --> G
+  G --> AU
+  G --> OR
+  OR --> PA
+  OR --> IN
+  OR --> DB
+  OR --> Q
+  PA --> Q
+  Q --> NO
+  IN --> S3`,
+    },
+  };
+
+  const name = location.hash.slice(1) || 'light';
+  if (name === 'tile') {
+    document.body.innerHTML = `<div class="tile"><img src="../src/icons/icon128.png" alt="">
+      <div><h1>Mermaid Render</h1><p>Mermaid diagrams in Jira, Confluence &amp; Bitbucket</p></div></div>`;
+  } else {
+    const s = SCENES[name];
+    if (s.dark) document.documentElement.dataset.colorMode = 'dark';
+    const esc = (t) => t.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+    document.body.innerHTML = `
+      <div class="caption"><h1>${esc(s.caption[0])}</h1><p>${esc(s.caption[1])}</p></div>
+      <div class="doc">
+        <h2>${esc(s.title)}</h2>
+        <div class="meta">${esc(s.meta)}</div>
+        ${s.text ? `<p>${esc(s.text)}</p>` : ''}
+        <div class="code-block"><span class="prismjs" data-testid="renderer-code-block"><code class="language-text">${esc(s.code)}</code></span></div>
+      </div>`;
+    if (name === 'viewer') {
+      // Open the viewer once the diagram has rendered, then zoom in a little.
+      const timer = setInterval(() => {
+        const button = [...document.querySelectorAll('.mr-button')].find((b) => b.textContent === 'Full screen' && !b.hidden);
+        if (!button) return;
+        clearInterval(timer);
+        button.click();
+        const cap = document.createElement('div');
+        cap.className = 'viewer-caption';
+        cap.innerHTML = `<h1>${esc(s.caption[0])}</h1><p>${esc(s.caption[1])}</p>`;
+        document.body.append(cap);
+      }, 100);
+    }
+  }
+</script>
+<script src="../dist/vendor/mermaid.min.js"></script>
+<script src="../dist/content/detect.js"></script>
+<script src="../dist/content/live.js"></script>
+<script src="../dist/content/viewer.js"></script>
+<script src="../dist/content/main.js"></script>
+</body>
+</html>
